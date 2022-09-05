@@ -59,10 +59,10 @@ spec:
     environments:
       development:
         - name: telegraf
-		  values:
-		  - name: image.pullPolicy
-		    value: always
-		  version: 1.6.2-NEW_VERSION
+      values:
+      - name: image.pullPolicy
+        value: always
+      version: 1.6.2-NEW_VERSION
 ```
 This will produce next release for development for `telegraf`:
 ```yaml
