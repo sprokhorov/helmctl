@@ -1,0 +1,15 @@
+version: v1
+spec:
+  releases:
+    - name: origin-name
+      chart: something
+    - name: origin-name
+      chart: another
+  installs:
+    environments:
+      development:
+        - origin-name
+    projects:
+      qdoo-env-dev-01-567435:
+        - origin-name
+

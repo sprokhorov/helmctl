@@ -1,0 +1,17 @@
+version: v1
+spec:
+  repositories:
+    - name: something
+      url: "127.0.0.1"
+  releases:
+    - name: origin-name
+      chart: something
+  installs:
+    environments:
+      development:
+        - origin-name
+    projects:
+      qdoo-env-dev-01-567435:
+        - origin-name
+        - name: origin-name
+

@@ -1,0 +1,74 @@
+version: v1
+spec:
+  # Describe required repositories
+  # repositories:
+  #   - name: qdoo-museum
+  #     url: "127.0.0.1"
+  #     user: user
+  #     password: pass
+  # Describe releases
+  releases:
+    - name: will-be-overrided
+      <<: !include releases/release1/helmctl.yaml
+      values:
+        - name: CUSTOM_HOME
+          value: !env HOME
+        - name: CUSTOM_STRING
+          value: line
+        - name: testKey
+          value: originalValue
+          type: string
+      atomic: true
+    - <<: !include releases/release1/helmctl.yaml
+      name: new-test
+#    - name: origin-name
+#      include: releases/release1/helmctl.yaml
+#      chart: stable/example
+#      beforeScripts:
+#        - releases/before.sh
+#      valueFiles:
+#        - name: releases/defaults.yaml
+    # - name: dd-mon-sdsad
+    #   chart: stable/datadog
+    #   version: v1.0.3
+    #   include: datadog/dd-mon/manifest-d.yaml
+    # - name: sonarqube
+    #   include: sonarqube/manifest.yaml
+    #   beforeScript:
+    #     - sonarqube/before.sh
+    #   afterScript:
+    #     - sonarqube/after.sh
+    # - name: dd-mon
+    #   chart: stable/datadog
+    #   repository:
+    #     name: qdoo-museum
+    #     url: "127.0.0.1"
+    #     user: user
+    #     password: pass
+    #   version: v2.1.0
+    #   namespace: datadog
+    #   atomic: true
+    #   values:
+    #     - name: image.tag
+    #       value: latest
+    #       type: string
+    #   value-files:
+    #     - name: datadog/dd-mon/int.yaml
+    #       decrypt: true
+  # Install releases
+  installs:
+    environments:
+      development:
+        - overriden-name
+      custom:
+        - name: overriden-name
+          values:
+            - name: testKey
+              value: newValue
+    projects:
+      qdoo-env-dev-01-567435:
+        - overriden-name
+      qdoo-env-custom:
+        - name: overriden-name
+          atomic: true
+

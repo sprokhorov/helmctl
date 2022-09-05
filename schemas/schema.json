@@ -1,0 +1,158 @@
+{
+    "title": "helmctl_config",
+    "type": "object",
+    "default": {},
+
+	"definitions": {
+		"repository": {
+			"type": "object",
+			"properties": {
+					"name": {"type": "string"},
+					"url": {"type": "string"},
+					"user": {"type": "string"},
+					"password": {"type": "string"}
+				},
+			"additionalProperties": false,
+			"required": ["name", "url"]
+		},
+
+		"value": {
+			"type": "object",
+			"properties": {
+				"name": {"type": "string"},
+				"value": {"oneOf": [
+					{"type": "string"},
+					{"type": "number"},
+					{"type": "boolean"}
+				]},
+				"type": {"type": "string"}
+			},
+			"additionalProperties": false,
+			"required": ["name", "value"]
+		},
+
+		"valueFile": {
+			"type": "object",
+			"properties": {
+				"name": {"type": "string"},
+				"decrypt": {"type": "boolean"}
+			},
+			"additionalProperties": false,
+			"required": ["name"]
+		},
+
+		"release": {
+			"type": "object",
+			"properties": {
+				"name": {"type": "string"},
+				"chart": {"type": "string"},
+				"version": {"type": "string"},
+				"namespace": {"type": "string"},
+				"beforeScripts": {"type": "array", "items": {"type": "string"}},
+				"afterScripts": {"type": "array", "items": {"type": "string"}},
+				"atomic": {"type": "boolean"},
+				"repository": { "$ref": "#/definitions/repository" },
+				"values": {"type": "array", "items": {"$ref": "#/definitions/value"}},
+				"valueFiles": {"type": "array", "items": {"$ref": "#/definitions/valueFile"}},
+				"IncludePath": {"type": "string"}
+			},
+			"additionalProperties": false,
+			"required": ["name", "chart"]
+		},
+
+		"releaseNonStrict": {
+			"type": "object",
+			"properties": {
+				"name": {"type": "string"},
+				"chart": {"type": "string"},
+				"version": {"type": "string"},
+				"include": {"type": "string"},
+				"namespace": {"type": "string"},
+				"beforeScripts": {"type": "array", "items": {"type": "string"}},
+				"afterScripts": {"type": "array", "items": {"type": "string"}},
+				"atomic": {"type": "boolean"},
+				"repository": { "$ref": "#/definitions/repository" },
+				"values": {"type": "array", "items": {"$ref": "#/definitions/value"}},
+				"valueFiles": {"type": "array", "items": {"$ref": "#/definitions/valueFile"}},
+				"IncludePath": {"type": "string"}
+			},
+			"additionalProperties": false,
+			"required": ["name"]
+		},
+
+		"customMap": {
+			"type": "object",
+			"patternProperties": {
+				"^.*$": {
+					"type": "array",
+					"items": {"$ref": "#/definitions/customMapObject"}
+				}
+			},
+			"properties": {},
+			"additionalProperties": false
+		},
+
+		"customMapObject": {
+			"oneOf": [
+				{"type": "string"},
+				{"$ref": "#/definitions/releaseNonStrict"}
+			]
+		},
+
+
+		"project": {
+			"oneOf": [
+				{"type": "string"},
+				{"type": "object", "properties": {}, "additionalProperties": true}
+			]
+		}
+
+	},
+
+    "properties": {
+
+        "version": {
+			"type": "string"
+        },
+
+		"spec": {
+			"type": "object",
+			"properties": {
+				"repositories": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/repository"
+					},
+					"uniqueItems": true
+				},
+
+				"releases": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/release"
+					},
+					"uniqueItems": true
+				},
+
+				"installs": {
+					"type": "object",
+					"properties": {
+						"environments": {"$ref": "#/definitions/customMap"},
+						"projects": {"$ref": "#/definitions/customMap"}
+					},
+					"additionalProperties": false
+				}
+			},
+			"required": [
+				"releases",
+				"installs"
+			],
+			"additionalProperties": false
+		}
+	},
+
+    "required": [
+      "version",
+	  "spec"
+    ]
+}

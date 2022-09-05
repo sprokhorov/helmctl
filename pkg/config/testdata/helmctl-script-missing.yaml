@@ -1,0 +1,12 @@
+version: v1
+spec:
+  releases:
+    - name: origin-name
+      chart: something
+      beforeScripts:
+        - notfound.sh
+  installs:
+    environments:
+      development:
+        - test-release
+

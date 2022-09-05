@@ -1,0 +1,8 @@
+name: overriden-name
+chart: stable/test-release
+version: v1.0.1
+afterScripts:
+  - after.sh
+values:
+  - name: image.tag
+    value: latest

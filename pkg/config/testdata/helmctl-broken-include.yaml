@@ -1,0 +1,12 @@
+version: v1
+spec:
+  releases:
+    - !include something_missing
+  installs:
+    environments:
+      development:
+        - origin-name
+    projects:
+      qdoo-env-dev-01-567435:
+        - origin-name
+

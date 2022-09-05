@@ -1,0 +1,10 @@
+version: v1
+spec:
+  releases:
+    - name: origin-name
+      chart: something
+  installs:
+    environments:
+      development:
+        - test-release
+

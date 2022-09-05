@@ -1,0 +1,55 @@
+version: v1
+spec:
+  # List of required helm repositories. They will be added for every helmctl install
+  # command. Repository fields could be defined via environment variablbes.
+  repositories:
+    - name: example
+      url: http://example.com/
+      # User and Password fields could be avoided.
+      user: example-user
+      password: !env EXAMPLE_PASSWORD
+  releases:
+    - name: example-release-1
+      chart: stable/example
+      version: 0.1.1
+      # Adds --atomic flag to helm upgrade command.
+      atomic: true
+      # By default `namespace` will be equal to `name`.
+      namespace: example
+      # This repository will be added befor install.
+      repository:
+        name: gitlab
+        url: https://charts.gitlab.io
+      # Yaml formated files with chart values.
+      valueFiles:
+        - name: releases/example/defaults.yaml
+          # Decrypt sops file if required.
+          decrypt: true
+      # This values will be added with --set flag to helm upgrade command.
+      values:
+        - name: image.tag
+          value: latest
+          # if type is string then --set-string flag will be used.
+          type: string
+      # Those scripts will be runned before running helm.
+      beforeScripts:
+        - releases/example/before.sh
+      # Those scripts will be runned after running helm.
+      afterScripts:
+        - releases/example/after.sh
+      # All release fields could be included from file.
+    - <<: !include releases/example/example-release-2.yaml
+      name: example-release-2
+    - !include releases/example/example-release-2.yaml
+  installs:
+    environments:
+      # Environment contains list of releases to install.
+      development:
+        - name: example-release-1
+          chart: non-stable/example
+          values:
+            - name: testKey
+              value: testValue
+      staging:
+        - example-release-1
+        - example-release-2
